@@ -38,10 +38,16 @@
 }
 
 body {
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial,
+    sans-serif;
   font-size: 1rem;
   line-height: 1.6;
-  background: linear-gradient(135deg, var(--bg) 0%, #1a1a1a 50%, var(--primary-light) 100%);
+  background: linear-gradient(
+    135deg,
+    var(--bg) 0%,
+    #1a1a1a 50%,
+    var(--primary-light) 100%
+  );
   color: var(--text);
   min-height: 100vh;
 }
@@ -147,7 +153,7 @@ footer {
   overflow: hidden;
   transition: var(--transition);
   cursor: pointer;
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  border: 1px solid red;
 }
 
 .movie-card:hover {
@@ -165,7 +171,11 @@ footer {
   width: 100%;
   height: 400px;
   object-fit: cover;
-  background: linear-gradient(135deg, var(--secondary-light), var(--primary-light));
+  background: linear-gradient(
+    135deg,
+    var(--secondary-light),
+    var(--primary-light)
+  );
   transition: var(--transition);
 }
 
@@ -397,5 +407,37 @@ dialog#movie-dialog::backdrop {
   }
   #close-dialog {
     background: rgba(23, 23, 23, 0.9);
+  }
+}
+
+/* Grid Container - parent element */
+/* Mobile først - 1 kolonne */
+#movie-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1.5rem;
+  padding: 1rem;
+}
+
+/* Tablet - 2 kolonner */
+@media (min-width: 600px) {
+  #movie-list {
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+    padding: 2rem;
+  }
+}
+
+/* Desktop - 3 kolonner */
+@media (min-width: 992px) {
+  #movie-list {
+    grid-template-columns: 1fr 1fr 1fr;
+  }
+}
+
+/* Store skærme - 4 kolonner */
+@media (min-width: 1400px) {
+  #movie-list {
+    grid-template-columns: 1fr 1fr 1fr 1fr;
   }
 }
