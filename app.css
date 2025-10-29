@@ -23,9 +23,9 @@
 
   /* Effects */
   --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.3);
-  --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.4);
+  --shadow-lg: 0 8px 25px rgba(0, 0, 0, 0.3);
   --radius: 1rem;
-  --transition: 250ms ease;
+  --transition: transform 0.2s ease;
 }
 
 /* =====================
@@ -157,7 +157,7 @@ footer {
 }
 
 .movie-card:hover {
-  transform: translateY(-8px) scale(1.02);
+  transform: translateY(-5px);
   box-shadow: var(--shadow-lg);
   border-color: var(--secondary);
 }
