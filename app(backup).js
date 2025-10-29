@@ -165,10 +165,7 @@ const currentYear = new Date().getFullYear();
 const barbieAge = currentYear - barbieMovie.year;
 console.log(`${barbieMovie.title} er ${barbieAge} år gammel`);
 
-
-
-
-// BACK UP 
+// BACK UP
 
 // Tilføj resten af dine movie objekter her...
 // (De objekter du oprettede i Trin 13)

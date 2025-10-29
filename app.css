@@ -62,7 +62,7 @@ main {
 }
 
 /* =====================
-   FILTERBAR (SØG/SORT/FILTER)
+   FILTERBAR (SØG/SORT/FILTER/ÅR-FILTER/RATING-FILTER/RYD-KNAP)
    ===================== */
 .filterbar {
   display: flex;
@@ -105,6 +105,102 @@ main {
 #sort-select {
   min-width: 160px;
   cursor: pointer;
+}
+
+/* År filter styling */
+.year-filter {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.year-filter label {
+  font-size: 0.875rem;
+  color: var(--text-light);
+  white-space: nowrap;
+}
+
+.year-filter input {
+  width: 80px;
+  background: var(--bg-card);
+  color: var(--text);
+  border: 1px solid var(--secondary);
+  border-radius: var(--radius);
+  padding: 0.75rem 1rem;
+  font-size: 1rem;
+  transition: var(--transition);
+  box-shadow: var(--shadow);
+}
+
+.year-filter input:focus {
+  outline: 2px solid var(--secondary);
+  border-color: var(--secondary);
+}
+
+/* Rating filter styling */
+.rating-filter {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.rating-filter label {
+  font-size: 0.875rem;
+  color: var(--text-light);
+  white-space: nowrap;
+}
+
+.rating-filter input {
+  width: 80px;
+  background: var(--bg-card);
+  color: var(--text);
+  border: 1px solid var(--secondary);
+  border-radius: var(--radius);
+  padding: 0.75rem 1rem;
+  font-size: 1rem;
+  transition: var(--transition);
+  box-shadow: var(--shadow);
+}
+
+.rating-filter input:focus {
+  outline: 2px solid var(--secondary);
+  border-color: var(--secondary);
+}
+
+/* Ryd-knap styling */
+
+#clear-filters {
+  background: var(--bg-card);
+  color: var(--text);
+  border: 1px solid var(--secondary);
+  border-radius: var(--radius);
+  padding: 0.75rem 1rem;
+  font-size: 1rem;
+  transition: var(--transition);
+  box-shadow: var(--shadow);
+  cursor: pointer;
+  font-weight: 500;
+}
+
+#clear-filters:hover {
+  background: var(--error);
+  color: white;
+  border-color: var(--error);
+  transform: translateY(-2px);
+}
+
+#clear-filters:focus {
+  outline: 2px solid var(--secondary);
+  border-color: var(--secondary);
+}
+
+.no-results {
+  text-align: center;
+  color: var(--text-light);
+  font-size: 1.2rem;
+  margin: 2rem 0;
+  padding: 2rem;
+  background: var(--bg-card);
+  border-radius: var(--radius);
 }
 
 /* =====================
@@ -410,6 +506,10 @@ dialog#movie-dialog::backdrop {
   }
 }
 
+/* =====================
+   MOVIE GRID RESPONSIVE LAYOUT
+   ===================== */
+
 /* Grid Container - parent element */
 /* Mobile først - 1 kolonne */
 #movie-list {
@@ -439,5 +539,24 @@ dialog#movie-dialog::backdrop {
 @media (min-width: 1400px) {
   #movie-list {
     grid-template-columns: 1fr 1fr 1fr 1fr;
+  }
+}
+
+/* Responsive filter bar */
+@media (max-width: 768px) {
+  .filterbar {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 1rem;
+  }
+
+  .year-filter,
+  .rating-filter {
+    justify-content: space-between;
+  }
+
+  .year-filter input,
+  .rating-filter input {
+    width: 100px;
   }
 }

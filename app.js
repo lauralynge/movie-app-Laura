@@ -18,6 +18,21 @@ function initApp() {
   document
     .querySelector("#sort-select")
     .addEventListener("change", filterMovies);
+
+  // NYE: Kun år felter
+  document.querySelector("#year-from").addEventListener("input", filterMovies);
+  document.querySelector("#year-to").addEventListener("input", filterMovies);
+
+  // Rating field event listeners // Tilføj EFTER år listeners
+  document
+    .querySelector("#rating-from")
+    .addEventListener("input", filterMovies);
+  document.querySelector("#rating-to").addEventListener("input", filterMovies);
+
+  // Clear filters knap - TILFØJ TIL SIDST
+  document
+    .querySelector("#clear-filters")
+    .addEventListener("click", clearAllFilters);
 }
 
 // #2: Fetch movies from JSON and display them
@@ -67,10 +82,17 @@ function displayMovie(movie) {
 
   // Tilføj click event til den nye card
   const newCard = movieList.lastElementChild;
-
   newCard.addEventListener("click", function () {
     console.log(`🎬 Klik på: "${movie.title}"`);
-    showMovieDetails(movie);
+    showMovieModal(movie); // ÆNDRET: Fra showMovieDetails til showMovieModal
+  });
+
+  // Tilføj keyboard support
+  newCard.addEventListener("keydown", function (event) {
+    if (event.key === "Enter" || event.key === " ") {
+      event.preventDefault();
+      showMovieModal(movie); // ÆNDRET: Fra showMovieDetails til showMovieModal
+    }
   });
 }
 
@@ -82,6 +104,16 @@ function filterMovies() {
   const genreValue = document.querySelector("#genre-select").value;
   const sortValue = document.querySelector("#sort-select").value; // ← NY linje!
 
+  // NYE år variable - TILFØJ KUN DISSE TO LINJER
+  const yearFrom = Number(document.querySelector("#year-from").value) || 0;
+  const yearTo = Number(document.querySelector("#year-to").value) || 9999;
+
+  // NYE rating variable - TILFØJ EFTER år variablerne
+  const ratingFrom = Number(document.querySelector("#rating-from").value) || 0;
+  const ratingTo = Number(document.querySelector("#rating-to").value) || 10;
+
+  console.log("Rating filter:", ratingFrom, "til", ratingTo);
+
   // Start med alle movies - vi vil altid gerne begynde med hele datasættet
   let filteredMovies = allMovies;
 
@@ -92,14 +124,41 @@ function filterMovies() {
     });
   }
 
-  // TRIN 2: Filtrer på genre (fra dropdown)
+  // TRIN 2: Filter på genre (fra dropdown)
   if (genreValue !== "all") {
     filteredMovies = filteredMovies.filter((movie) => {
       return movie.genre.includes(genreValue);
     });
   }
 
-  // TRIN 3: Sorter resultater (fra dropdown)
+  // ÅR RANGE FILTER // Tilføj EFTER genre filter, FØR sortering
+  if (yearFrom > 0 || yearTo < 9999) {
+    console.log("Anvender år filter:", yearFrom, "-", yearTo);
+    const before = filteredMovies.length;
+
+    filteredMovies = filteredMovies.filter((movie) => {
+      return movie.year >= yearFrom && movie.year <= yearTo;
+    });
+
+    console.log("År filter:", before, "→", filteredMovies.length, "film");
+  } else {
+    console.log("Ingen år filter (alle år)");
+  }
+
+  // RATING RANGE FILTER - TILFØJ EFTER år filter
+  if (ratingFrom > 0 || ratingTo < 10) {
+    console.log("Anvender rating filter:", ratingFrom, "-", ratingTo);
+    const before = filteredMovies.length;
+
+    filteredMovies = filteredMovies.filter((movie) => {
+      return movie.rating >= ratingFrom && movie.rating <= ratingTo;
+    });
+
+    console.log("Rating filter:", before, "→", filteredMovies.length, "film");
+  } else {
+    console.log("Ingen rating filter (alle ratings)");
+  }
+  // TRIN 3 (SORTERING): Sorter resultater (fra dropdown)   (altid til sidst)
   if (sortValue === "title") {
     filteredMovies.sort((a, b) => a.title.localeCompare(b.title)); // A-Å
   } else if (sortValue === "year") {
@@ -107,6 +166,9 @@ function filterMovies() {
   } else if (sortValue === "rating") {
     filteredMovies.sort((a, b) => b.rating - a.rating); // Højeste først
   }
+
+  console.log(`✅ FINAL RESULTAT: ${filteredMovies.length} movies`);
+  console.log("🔄 ===== FILTRERING FÆRDIG =====\n");
 
   displayMovies(filteredMovies); // Vis de filtrerede og sorterede movies
 }
@@ -134,20 +196,62 @@ function populateGenreDropdown() {
   }
 }
 
+// NEDENSTÅENDE ÆNDRET FRA ALERT TIL MODAL DIALOG
 // #7: Vis movie detaljer (midlertidig løsning med alert)
-function showMovieDetails(movie) {
-  console.log("📊 Viser detaljer for:", movie.title);
+// function showMovieDetails(movie) {
+//  console.log("📊 Viser detaljer for:", movie.title);
 
-  // Vis i alert (midlertidig løsning)
-  const movieInfo = `🎬 ${movie.title} (${movie.year})
-🎭 ${movie.genre.join(", ")}
-⭐ Rating: ${movie.rating}
-🎯 Instruktør: ${movie.director}
-👥 Skuespillere: ${movie.actors.join(", ")}
+// Vis i alert (midlertidig løsning)
+//  const movieInfo = `🎬 ${movie.title} (${movie.year})
+// 🎭 ${movie.genre.join(", ")}
+// ⭐ Rating: ${movie.rating}
+// 🎯 Instruktør: ${movie.director}
+// 👥 Skuespillere: ${movie.actors.join(", ")}
 
-📝 ${movie.description}`;
+// 📝 ${movie.description}`;
 
-  alert(movieInfo);
+// alert(movieInfo);
+//}
 
-  // TODO: Næste gang laver vi modal dialog!
+// #8: Vis movie i modal dialog
+function showMovieModal(movie) {
+  console.log("🎭 Åbner modal for:", movie.title);
+
+  // Byg HTML struktur dynamisk
+  const dialogContent = document.querySelector("#dialog-content");
+  dialogContent.innerHTML = `
+    <img src="${movie.image}" alt="Poster af ${
+    movie.title
+  }" class="movie-poster">
+    <div class="dialog-details">
+      <h2>${movie.title} <span class="movie-year">(${movie.year})</span></h2>
+      <p class="movie-genre">${movie.genre.join(", ")}</p>
+      <p class="movie-rating">⭐ ${movie.rating}</p>
+      <p><strong>Director:</strong> ${movie.director}</p>
+      <p><strong>Actors:</strong> ${movie.actors.join(", ")}</p>
+      <p class="movie-description">${movie.description}</p>
+    </div>
+  `;
+
+  // Åbn modalen
+  document.querySelector("#movie-dialog").showModal();
+}
+
+// Ny funktion: Ryd alle filtre
+function clearAllFilters() {
+  console.log("🗑️ Rydder alle filtre");
+
+  // Ryd søgning og dropdown felter
+  document.querySelector("#search-input").value = "";
+  document.querySelector("#genre-select").value = "all";
+  document.querySelector("#sort-select").value = "none";
+
+  // Ryd de nye range felter
+  document.querySelector("#year-from").value = "";
+  document.querySelector("#year-to").value = "";
+  document.querySelector("#rating-from").value = "";
+  document.querySelector("#rating-to").value = "";
+
+  // Kør filtrering igen (viser alle film)
+  filterMovies();
 }

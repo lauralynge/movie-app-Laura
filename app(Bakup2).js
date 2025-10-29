@@ -159,7 +159,6 @@ function displayMovie(movieObject) {
 movieListContainer.insertAdjacentHTML("beforeend", movieHTML);
 console.log(`${movieObject.title} tilføjet til DOM!`);
 
-
 // Test funktionen
 displayMovie(barbieMovie);
 // ========== DISPLAY ALL MOVIES ==========
